@@ -1,0 +1,23 @@
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  const { path, ...params } = req.query;
+  const queryString = new URLSearchParams(params).toString();
+  const url = `https://api.tcgapi.dev/v1/${path}${queryString ? '?' + queryString : ''}`;
+
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer tcg_live_ae57dcf8f02d7e9742d392b9c36e4c62e9591a08`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  const data = await response.json();
+  return res.status(response.status).json(data);
+}
