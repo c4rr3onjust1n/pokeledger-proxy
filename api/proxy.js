@@ -8,11 +8,15 @@ export default async function handler(req, res) {
   }
 
   const { path, ...params } = req.query;
-  params['api_key'] = 'tcg_live_ae57dcf8f02d7e9742d392b9c36e4c62e9591a08';
   const queryString = new URLSearchParams(params).toString();
   const url = `https://api.tcgapi.dev/v1/${path}?${queryString}`;
 
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      'X-API-Key': 'tcg_live_ae57dcf8f02d7e9742d392b9c36e4c62e9591a08'
+    }
+  });
+
   const text = await response.text();
   res.setHeader('Content-Type', 'application/json');
   return res.status(response.status).send(JSON.stringify({
