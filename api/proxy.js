@@ -18,6 +18,11 @@ export default async function handler(req, res) {
     }
   });
 
-  const data = await response.json();
-  return res.status(response.status).json(data);
+  const text = await response.text();
+  res.setHeader('Content-Type', 'application/json');
+  return res.status(response.status).send(JSON.stringify({
+    status: response.status,
+    url_called: url,
+    body: text
+  }));
 }
