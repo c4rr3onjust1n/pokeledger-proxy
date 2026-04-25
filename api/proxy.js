@@ -9,6 +9,8 @@ export default async function handler(req, res) {
 
   try {
     const { path, ...params } = req.query;
+    // Clean special characters that break TCG API queries
+    if (params.q) params.q = params.q.replace(/[()]/g, '').replace(/\s+/g, ' ').trim();
     const queryString = new URLSearchParams(params).toString();
     const url = `https://api.tcgapi.dev/v1/${path}?${queryString}`;
 
